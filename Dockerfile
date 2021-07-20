@@ -3,7 +3,7 @@ WORKDIR /app
 RUN git clone https://github.com/mulesoft/mule.git
 
 FROM ubuntu:latest
-COPY --from=git . /app/
+COPY --from=git /app /app/
 
 RUN apk add --no-cache curl tar bash procps
 

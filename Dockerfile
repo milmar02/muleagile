@@ -47,7 +47,7 @@ COPY helloworld.jar /opt/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 #RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]
 
-RUN chown -R mule:mule /opt/mule/ && \
+RUN chown -R mule:mule /opt/mule && \
     chmod -R 744 /opt/mule/ && \
     chmod -R 744 /opt/mule
 

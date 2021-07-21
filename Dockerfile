@@ -26,9 +26,7 @@ RUN	wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
 #RUN adduser -D -g "" mule mule
 
 RUN mkdir /opt/mule-standalone-${MULE_VERSION} && \
-    ln -s /opt/mule-standalone-${MULE_VERSION} ${MULE_HOME} && \
-    chmod -R g+w /opt/mule/ && \
-    chmod -R g+w /opt/mule
+    ln -s /opt/mule-standalone-${MULE_VERSION} ${MULE_HOME}
 #    chown mule:mule -R /opt/mule/
 
 RUN echo ${TZ} > /etc/timezone
@@ -48,6 +46,9 @@ COPY helloworld.jar /opt/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 #RUN chown mule:mule /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 #RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]
+
+RUN chmod -R g+w /opt/mule/ && \
+    chmod -R g+w /opt/mule
 
 USER root
 

@@ -1,42 +1,50 @@
-FROM alpine/git as git
-WORKDIR /app
-RUN git clone https://github.com/mulesoft/mule.git
+FROM anapsix/alpine-java:8_jdk_nashorn
 
-FROM ubuntu:latest
-COPY --from=git /app/mule /app/
+# Define environment variables.
+ENV BUILD_DATE=06292021
+ENV MULE_HOME=/opt/mule
+ENV MULE_VERSION=4.3.0-20210119
+ENV MULE_MD5=0859dad4a6dd992361d34837658e517d
+ENV TINI_SUBREAPER=
+ENV TZ=UTC
 
-RUN apk add --no-cache curl tar bash procps
+# SSL Cert for downloading mule zip
+RUN apk --no-cache update && \
+    apk --no-cache upgrade && \
+    apk --no-cache add ca-certificates && \
+    update-ca-certificates && \
+    apk --no-cache add openssl && \
+    apk add --update tzdata && \
+    rm -rf /var/cache/apk/*
 
-# Downloading and installing Maven
-# 1- Define a constant with the version of maven you want to install
-ARG MAVEN_VERSION=3.8.1         
+RUN adduser -D -g "" mule mule
 
-# 2- Define a constant with the working directory
-ARG USER_HOME_DIR="/root"
+RUN mkdir /opt/mule-standalone-${MULE_VERSION} && \
+    ln -s /opt/mule-standalone-${MULE_VERSION} ${MULE_HOME} && \
+    chown mule:mule -R /opt/mule*
 
-# 3- Define the SHA key to validate the maven download
-ARG SHA=b4880fb7a3d81edd190a029440cdf17f308621af68475a4fe976296e71ff4a4b546dd6d8a58aaafba334d309cc11e638c52808a4b0e818fc0fd544226d952544
+RUN echo ${TZ} > /etc/timezone
 
-# 4- Define the URL where maven can be downloaded from
-ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
+USER mule
 
-# 5- Create the directories, download maven, validate the download, install it, remove downloaded file and set links
-RUN mkdir -p /usr/share/maven /usr/share/maven/ref
-RUN echo "Downlaoding maven"
-RUN curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz
-RUN echo "Checking download hash" 
-RUN echo "Unziping maven"
-RUN tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1
+# For checksum, alpine linux needs two spaces between checksum and file name
+RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/${MULE_VERSION}/mule-standalone-${MULE_VERSION}.tar.gz && \
+    echo "${MULE_MD5}  mule-standalone-${MULE_VERSION}.tar.gz" | md5sum -c && \
+    cd /opt && \ 
+    tar xvzf ~/mule-standalone-${MULE_VERSION}.tar.gz && \
+    rm ~/mule-standalone-${MULE_VERSION}.tar.gz
 
-RUN echo "Cleaning and setting links"
-RUN rm -f /tmp/apache-maven.tar.gz
-RUN ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+# Define mount points.
+COPY --chown=mule:mule wrapper.conf /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+COPY --chown=mule:mule helloworld.jar /opt/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
+#RUN chown mule:mule /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+#RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]
 
-# 6- Define environmental variables required by Maven, like Maven_Home directory and where the maven repo is located
-ENV MAVEN_HOME /usr/share/maven
-ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+# Define working directory.
+WORKDIR ${MULE_HOME}
 
-WORKDIR /app
-RUN mvn install
+CMD [ "/opt/mule/bin/mule"]
 
-ENTRYPOINT /bin/sh -c
+# Default http port
+EXPOSE 8081

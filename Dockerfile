@@ -52,7 +52,10 @@ VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_H
 # Define working directory.
 WORKDIR ${MULE_HOME}
 
-CMD [ "/opt/mule/bin/mule"]
-
 # Default http port
 EXPOSE 8081
+
+ENTRYPOINT [ "/opt/mule/bin/mule"]
+
+
+

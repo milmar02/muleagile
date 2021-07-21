@@ -40,7 +40,7 @@ RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositori
     rm ~/mule-standalone-${MULE_VERSION}.tar.gz
 
 # Define mount points.
-COPY wrapper.conf /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+#COPY wrapper.conf /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 COPY helloworld.jar /opt/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 #RUN chown mule:mule /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 #RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
@@ -64,7 +64,7 @@ RUN id -nu 0 | xargs -I{} chown -R {}:{} ${MULE_HOME}/
 # Default http port
 EXPOSE 8081
 
-ENTRYPOINT [ "/opt/mule/bin/mule"]
-
+#ENTRYPOINT [ "/opt/mule/bin/mule"]
+ENTRYPOINT ["ls -l"]
 
 

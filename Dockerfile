@@ -57,18 +57,18 @@ WORKDIR ${MULE_HOME}
 
 RUN chgrp -R 0 ${MULE_HOME}/ && \
     chmod -R g=u ${MULE_HOME}/ && \
-	chgrp -R 0 ${MULE_HOME}/bin && \
-    chmod -R g=u ${MULE_HOME}/bin && \
-	chgrp -R 0 ${MULE_HOME}/conf && \
-    chmod -R g=u ${MULE_HOME}/conf && \
-	chgrp -R 0 ${MULE_HOME}/domains && \
-    chmod -R g=u ${MULE_HOME}/domains && \
-	chgrp -R 0 ${MULE_HOME}/lib && \
-    chmod -R g=u ${MULE_HOME}/lib && \
-	chgrp -R 0 ${MULE_HOME}/logs && \
-    chmod -R g=u ${MULE_HOME}/logs && \
-	chgrp -R 0 ${MULE_HOME}/services && \
-    chmod -R g=u ${MULE_HOME}/services   
+	chgrp -R 0 ${MULE_HOME}/bin/ && \
+    chmod -R g=u ${MULE_HOME}/bin/ && \
+	chgrp -R 0 ${MULE_HOME}/conf/ && \
+    chmod -R g=u ${MULE_HOME}/conf/ && \
+	chgrp -R 0 ${MULE_HOME}/domains/ && \
+    chmod -R g=u ${MULE_HOME}/domains/ && \
+	chgrp -R 0 ${MULE_HOME}/lib/ && \
+    chmod -R g=u ${MULE_HOME}/lib/ && \
+	chgrp -R 0 ${MULE_HOME}/logs/ && \
+    chmod -R g=u ${MULE_HOME}/logs/ && \
+	chgrp -R 0 ${MULE_HOME}/services/ && \
+    chmod -R g=u ${MULE_HOME}/services/   
 	
 RUN id -nu 0 | xargs -I{} chown -R {}:{} ${MULE_HOME}/
 CMD ls -RFlag ${MULE_HOME}

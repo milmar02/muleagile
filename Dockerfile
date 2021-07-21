@@ -41,8 +41,8 @@ RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositori
     rm ~/mule-standalone-${MULE_VERSION}.tar.gz
 
 # Define mount points.
-COPY --chown=mule:mule wrapper.conf /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
-COPY --chown=mule:mule helloworld.jar /opt/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
+COPY wrapper.conf /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+COPY helloworld.jar /opt/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 #RUN chown mule:mule /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 #RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]

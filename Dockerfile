@@ -27,11 +27,10 @@ RUN adduser -D -g "" mule mule
 
 RUN mkdir /opt/mule-standalone-${MULE_VERSION} && \
     ln -s /opt/mule-standalone-${MULE_VERSION} ${MULE_HOME}
-    chown mule:mule -R /opt/mule/
 
 RUN echo ${TZ} > /etc/timezone
 
-USER mule
+
 
 # For checksum, alpine linux needs two spaces between checksum and file name
 RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/${MULE_VERSION}/mule-standalone-${MULE_VERSION}.tar.gz && \
@@ -47,14 +46,20 @@ COPY helloworld.jar /opt/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 #RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]
 
-RUN chown -R mule:mule /opt/mule && \
-    chmod -R 744 /opt/mule/ && \
-    chmod -R 744 /opt/mule
-
 #USER root
 
 # Define working directory.
 WORKDIR ${MULE_HOME}
+
+USER root
+
+RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/
+#RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/bin
+#RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/conf/wrapper.conf
+CMD ls -RFlag ${MULE_HOME}
+RUN chmod -R a+g+x ${MULE_HOME}
+
+USER mule
 
 # Default http port
 EXPOSE 8081

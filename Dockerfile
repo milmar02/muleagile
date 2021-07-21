@@ -23,7 +23,7 @@ RUN	wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
 	wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
 	apk add glibc-2.32-r0.apk
 
-RUN adduser -D -g "" mule mule
+#RUN adduser -D -g "" mule mule
 
 RUN mkdir /opt/mule-standalone-${MULE_VERSION} && \
     ln -s /opt/mule-standalone-${MULE_VERSION} ${MULE_HOME}
@@ -51,13 +51,12 @@ VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_H
 # Define working directory.
 WORKDIR ${MULE_HOME}
 
-RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/
-#RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/bin
-#RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/conf/wrapper.conf
-CMD ls -RFlag ${MULE_HOME}
-RUN chmod -R a+g+x ${MULE_HOME}
+#RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/
+#CMD ls -RFlag ${MULE_HOME}
+#RUN chmod -R a+g+x ${MULE_HOME}
 
-USER 1000
+RUN chgrp -R 0 ${MULE_HOME}/ && \
+    chmod -R g=u ${MULE_HOME}/ 
 
 #CMD ls -l
 

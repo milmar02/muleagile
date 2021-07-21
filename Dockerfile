@@ -23,11 +23,11 @@ RUN	wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
 	wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
 	apk add glibc-2.32-r0.apk
 
-#RUN adduser -D -g "" mule mule
+RUN adduser -D -g "" mule mule
 
 RUN mkdir /opt/mule-standalone-${MULE_VERSION} && \
-    ln -s /opt/mule-standalone-${MULE_VERSION} ${MULE_HOME}
-#    chown mule:mule -R /opt/mule*
+    ln -s /opt/mule-standalone-${MULE_VERSION} ${MULE_HOME} && \
+    chown mule:mule -R /opt/mule/
 
 RUN echo ${TZ} > /etc/timezone
 

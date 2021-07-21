@@ -57,6 +57,7 @@ WORKDIR ${MULE_HOME}
 
 RUN chgrp -R 0 ${MULE_HOME}/ && \
     chmod -R g=u ${MULE_HOME}/ 
+RUN id -nu 0 | xargs -I{} chown -R {}:{} ${MULE_HOME}/
 
 #CMD ls -l
 

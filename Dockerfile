@@ -64,7 +64,7 @@ RUN id -nu 0 | xargs -I{} chown -R {}:{} ${MULE_HOME}/
 # Default http port
 EXPOSE 8081
 
-#ENTRYPOINT [ "/opt/mule/bin/mule"]
-ENTRYPOINT ["ls -l"]
+ENTRYPOINT [ "/opt/mule/bin/mule"]
+#ENTRYPOINT ["ls -l"]
 
 

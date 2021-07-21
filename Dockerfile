@@ -1,4 +1,5 @@
-FROM anapsix/alpine-java:8_jdk_nashorn
+FROM alpine:latest
+#FROM anapsix/alpine-java:8_jdk_nashorn
 
 # Define environment variables.
 ENV BUILD_DATE=06292021
@@ -12,10 +13,15 @@ ENV TZ=UTC
 RUN apk --no-cache update && \
     apk --no-cache upgrade && \
     apk --no-cache add ca-certificates && \
+	apk --no-cache add openjdk8 && \
     update-ca-certificates && \
     apk --no-cache add openssl && \
     apk add --update tzdata && \
     rm -rf /var/cache/apk/*
+	
+RUN	wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+	wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
+	apk add glibc-2.32-r0.apk
 
 RUN adduser -D -g "" mule mule
 

@@ -51,15 +51,15 @@ VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_H
 # Define working directory.
 WORKDIR ${MULE_HOME}
 
-USER root
-
 RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/
 #RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/bin
 #RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/conf/wrapper.conf
 CMD ls -RFlag ${MULE_HOME}
 RUN chmod -R a+g+x ${MULE_HOME}
 
-USER mule
+USER 1000
+
+#CMD ls -l
 
 # Default http port
 EXPOSE 8081

@@ -23,7 +23,7 @@ RUN	wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
 	wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
 	apk add glibc-2.32-r0.apk
 
-RUN adduser -D -g "" mule mule
+#RUN adduser -D -g "" mule mule
 
 RUN mkdir /opt/mule-standalone-${MULE_VERSION} && \
     ln -s /opt/mule-standalone-${MULE_VERSION} ${MULE_HOME} && \
@@ -31,7 +31,7 @@ RUN mkdir /opt/mule-standalone-${MULE_VERSION} && \
 
 RUN echo ${TZ} > /etc/timezone
 
-USER mule
+#USER mule
 
 # For checksum, alpine linux needs two spaces between checksum and file name
 RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/${MULE_VERSION}/mule-standalone-${MULE_VERSION}.tar.gz && \

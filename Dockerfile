@@ -27,8 +27,8 @@ RUN adduser -D -g "" 185 root -u 185
 
 
 RUN mkdir /app
-RUN chgrp -R 185 /app/ && \
-    chmod -R g=u /app/ && \
+#RUN chgrp -R 185 /app/ && \
+RUN chmod -R 777 /app/ && \
 RUN id -nu 185 | xargs -I{} chown -R {}:{} /app/
 
 RUN echo ${TZ} > /etc/timezone

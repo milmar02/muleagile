@@ -23,15 +23,21 @@ RUN	wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
 	wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
 	apk add glibc-2.32-r0.apk
 
-RUN adduser -D -g "" 1000360000 3000
-USER 1000360000
+RUN adduser -D -g "" mule mule -u 1000 -h /app
 
 
-RUN mkdir /app && \
-    mkdir /app/mule-standalone-${MULE_VERSION} && \
-    ln -s /app/mule-standalone-${MULE_VERSION} ${MULE_HOME}
+#RUN mkdir /app
+#RUN chgrp -R 1000360000 /opt/ && \
+#    chmod -R g=u /opt/ && \
+#RUN id -nu 1000360000:3000 | xargs -I{} chown -R {}:{} /opt/
 
 RUN echo ${TZ} > /etc/timezone
+
+#USER 1000360000
+RUN mkdir /app/mule-standalone-${MULE_VERSION} && \
+    ln -s /app/mule-standalone-${MULE_VERSION} ${MULE_HOME}
+
+
 
 
 
@@ -43,8 +49,8 @@ RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositori
     rm ~/mule-standalone-${MULE_VERSION}.tar.gz
 
 # Define mount points.
-COPY wrapper.conf /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
-COPY helloworld.jar /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
+COPY --chown=mule:mule wrapper.conf /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+COPY --chown=mule:mule helloworld.jar /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 #RUN chown mule:mule /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 #RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]
@@ -58,24 +64,24 @@ WORKDIR ${MULE_HOME}
 #CMD ls -RFlag ${MULE_HOME}
 #RUN chmod -R a+g+x ${MULE_HOME}
 
-RUN chgrp -R 1000360000 ${MULE_HOME}/ && \
-    chmod -R g=u ${MULE_HOME}/ && \
-	chgrp -R 1000360000 ${MULE_HOME}/bin/ && \
-    chmod -R g=u ${MULE_HOME}/bin/ && \
-	chgrp -R 1000360000 ${MULE_HOME}/conf/ && \
-    chmod -R g=u ${MULE_HOME}/conf/ && \
-	chgrp -R 1000360000 ${MULE_HOME}/domains/ && \
-    chmod -R g=u ${MULE_HOME}/domains/ && \
-	chgrp -R 1000360000 ${MULE_HOME}/lib/ && \
-    chmod -R g=u ${MULE_HOME}/lib/ && \
-	chgrp -R 1000360000 ${MULE_HOME}/logs/ && \
-    chmod -R g=u ${MULE_HOME}/logs/ && \
-	chgrp -R 1000360000 ${MULE_HOME}/services/ && \
-    chmod -R g=u ${MULE_HOME}/services/   
+#RUN chgrp -R 1000360000 ${MULE_HOME}/ && \
+#    chmod -R g=u ${MULE_HOME}/ && \
+#	chgrp -R 1000360000 ${MULE_HOME}/bin/ && \
+#    chmod -R g=u ${MULE_HOME}/bin/ && \
+#	chgrp -R 1000360000 ${MULE_HOME}/conf/ && \
+#    chmod -R g=u ${MULE_HOME}/conf/ && \
+#	chgrp -R 1000360000 ${MULE_HOME}/domains/ && \
+#    chmod -R g=u ${MULE_HOME}/domains/ && \
+#	chgrp -R 1000360000 ${MULE_HOME}/lib/ && \
+#    chmod -R g=u ${MULE_HOME}/lib/ && \
+#	chgrp -R 1000360000 ${MULE_HOME}/logs/ && \
+#    chmod -R g=u ${MULE_HOME}/logs/ && \
+#	chgrp -R 1000360000 ${MULE_HOME}/services/ && \
+#    chmod -R g=u ${MULE_HOME}/services/   
 	
-RUN id -nu 1000360000 | xargs -I{} chown -R {}:{} ${MULE_HOME}/
-CMD ls -RFlag ${MULE_HOME}
-RUN chmod -R a+g+x ${MULE_HOME}/
+#RUN id -nu 1000360000 | xargs -I{} chown -R {}:{} ${MULE_HOME}/
+#CMD ls -RFlag ${MULE_HOME}
+#RUN chmod -R a+g+x ${MULE_HOME}/
 
 #USER 1000360000
 

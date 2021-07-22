@@ -3,7 +3,7 @@ FROM alpine:latest
 
 # Define environment variables.
 ENV BUILD_DATE=06292021
-ENV MULE_HOME=/opt/mule
+ENV MULE_HOME=/app/mule
 ENV MULE_VERSION=4.3.0-20210119
 ENV MULE_MD5=0859dad4a6dd992361d34837658e517d
 ENV TINI_SUBREAPER=
@@ -26,8 +26,9 @@ RUN	wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
 RUN adduser -D -g "" 1000360000 3000
 USER 1000360000
 
-RUN mkdir /opt/mule-standalone-${MULE_VERSION} && \
-    ln -s /opt/mule-standalone-${MULE_VERSION} ${MULE_HOME}
+
+RUN mkdir /app/mule-standalone-${MULE_VERSION} && \
+    ln -s /app/mule-standalone-${MULE_VERSION} ${MULE_HOME}
 
 RUN echo ${TZ} > /etc/timezone
 
@@ -41,8 +42,8 @@ RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositori
     rm ~/mule-standalone-${MULE_VERSION}.tar.gz
 
 # Define mount points.
-COPY wrapper.conf /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
-COPY helloworld.jar /opt/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
+COPY wrapper.conf /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+COPY helloworld.jar /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 #RUN chown mule:mule /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 #RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]
@@ -80,7 +81,7 @@ RUN chmod -R a+g+x ${MULE_HOME}/
 # Default http port
 EXPOSE 8081
 
-ENTRYPOINT [ "/opt/mule/bin/mule"]
+ENTRYPOINT [ "/app/mule/bin/mule"]
 #ENTRYPOINT ["ls -l"]
 
 

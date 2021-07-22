@@ -33,7 +33,7 @@ RUN adduser -D -g "" mule mule -u 1000 -h /app
 
 RUN echo ${TZ} > /etc/timezone
 
-#USER 1000360000
+USER 1000
 RUN mkdir /app/mule-standalone-${MULE_VERSION} && \
     ln -s /app/mule-standalone-${MULE_VERSION} ${MULE_HOME}
 
@@ -49,8 +49,12 @@ RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositori
     rm ~/mule-standalone-${MULE_VERSION}.tar.gz
 
 # Define mount points.
-COPY --chown=mule:mule wrapper.conf /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
-COPY --chown=mule:mule helloworld.jar /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
+COPY wrapper.conf /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+COPY helloworld.jar /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
+
+USER root
+RUN id -nu 1000 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+RUN id -nu 1000 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 #RUN chown mule:mule /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 #RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]

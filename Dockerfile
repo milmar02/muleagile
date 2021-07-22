@@ -36,11 +36,7 @@ RUN echo ${TZ} > /etc/timezone
 USER 185
 RUN mkdir /app/mule-standalone-${MULE_VERSION} && \
     ln -s /app/mule-standalone-${MULE_VERSION} ${MULE_HOME}
-
-
-
-
-
+	
 # For checksum, alpine linux needs two spaces between checksum and file name
 RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/${MULE_VERSION}/mule-standalone-${MULE_VERSION}.tar.gz && \
     echo "${MULE_MD5}  mule-standalone-${MULE_VERSION}.tar.gz" | md5sum -c && \
@@ -58,44 +54,16 @@ RUN id -u 185 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/apps
 RUN chmod -R 777 /app/
 
 USER 185
-#RUN chown mule:mule /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
-#RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]
-
-#USER root
 
 # Define working directory.
 WORKDIR ${MULE_HOME}
 
-#RUN id -u mule | xargs -I{} chown -R {}:{} ${MULE_HOME}/
-#CMD ls -RFlag ${MULE_HOME}
-#RUN chmod -R a+g+x ${MULE_HOME}
 
-#RUN chgrp -R 1000360000 ${MULE_HOME}/ && \
-#    chmod -R g=u ${MULE_HOME}/ && \
-#	chgrp -R 1000360000 ${MULE_HOME}/bin/ && \
-#    chmod -R g=u ${MULE_HOME}/bin/ && \
-#	chgrp -R 1000360000 ${MULE_HOME}/conf/ && \
-#    chmod -R g=u ${MULE_HOME}/conf/ && \
-#	chgrp -R 1000360000 ${MULE_HOME}/domains/ && \
-#    chmod -R g=u ${MULE_HOME}/domains/ && \
-#	chgrp -R 1000360000 ${MULE_HOME}/lib/ && \
-#    chmod -R g=u ${MULE_HOME}/lib/ && \
-#	chgrp -R 1000360000 ${MULE_HOME}/logs/ && \
-#    chmod -R g=u ${MULE_HOME}/logs/ && \
-#	chgrp -R 1000360000 ${MULE_HOME}/services/ && \
-#    chmod -R g=u ${MULE_HOME}/services/   
-	
-#RUN id -nu 1000360000 | xargs -I{} chown -R {}:{} ${MULE_HOME}/
-#CMD ls -RFlag ${MULE_HOME}
-#RUN chmod -R a+g+x ${MULE_HOME}/
-
-#USER 1000360000
 
 # Default http port
 EXPOSE 8081
 
 ENTRYPOINT [ "/app/mule/bin/mule"]
-#ENTRYPOINT ["ls -l"]
 
 

@@ -27,7 +27,8 @@ RUN adduser -D -g "" 1000360000 3000
 USER 1000360000
 
 
-RUN mkdir /app/mule-standalone-${MULE_VERSION} && \
+RUN mkdir /app && \
+    mkdir /app/mule-standalone-${MULE_VERSION} && \
     ln -s /app/mule-standalone-${MULE_VERSION} ${MULE_HOME}
 
 RUN echo ${TZ} > /etc/timezone
@@ -37,7 +38,7 @@ RUN echo ${TZ} > /etc/timezone
 # For checksum, alpine linux needs two spaces between checksum and file name
 RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/${MULE_VERSION}/mule-standalone-${MULE_VERSION}.tar.gz && \
     echo "${MULE_MD5}  mule-standalone-${MULE_VERSION}.tar.gz" | md5sum -c && \
-    cd /opt && \ 
+    cd /app && \ 
     tar xvzf ~/mule-standalone-${MULE_VERSION}.tar.gz && \
     rm ~/mule-standalone-${MULE_VERSION}.tar.gz
 

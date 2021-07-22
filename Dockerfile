@@ -23,17 +23,17 @@ RUN	wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
 	wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
 	apk add glibc-2.32-r0.apk
 
-RUN adduser -D -g "" mule mule -u 1000 -h /app
+RUN adduser -D -g "" 185 root -u 185
 
 
-#RUN mkdir /app
-#RUN chgrp -R 1000360000 /opt/ && \
-#    chmod -R g=u /opt/ && \
-#RUN id -nu 1000360000:3000 | xargs -I{} chown -R {}:{} /opt/
+RUN mkdir /app
+RUN chgrp -R 185 /app/ && \
+    chmod -R g=u /app/ && \
+RUN id -nu 185 | xargs -I{} chown -R {}:{} /app/
 
 RUN echo ${TZ} > /etc/timezone
 
-USER 1000
+USER 185
 RUN mkdir /app/mule-standalone-${MULE_VERSION} && \
     ln -s /app/mule-standalone-${MULE_VERSION} ${MULE_HOME}
 
@@ -53,10 +53,10 @@ COPY wrapper.conf /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 COPY helloworld.jar /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 
 USER root
-RUN id -nu 1000 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
-RUN id -nu 1000 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
+RUN id -u 185 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+RUN id -u 185 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 
-USER 1000
+USER 185
 #RUN chown mule:mule /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 #RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]

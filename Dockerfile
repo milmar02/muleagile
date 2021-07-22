@@ -55,6 +55,8 @@ COPY helloworld.jar /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 USER root
 RUN id -nu 1000 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 RUN id -nu 1000 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
+
+USER 1000
 #RUN chown mule:mule /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 #RUN chmod 700 /opt/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]

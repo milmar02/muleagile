@@ -28,12 +28,12 @@ RUN adduser -D -g "" 185 root -u 185
 
 RUN mkdir /app
 #RUN chgrp -R 185 /app/ && \
-RUN chmod -R 777 /app/ && \
-RUN id -nu 185 | xargs -I{} chown -R {}:{} /app/
+#RUN chmod -R 777 /app/ && \
+#RUN id -nu 185 | xargs -I{} chown -R {}:{} /app/
 
 RUN echo ${TZ} > /etc/timezone
 
-USER 185
+#USER 185
 RUN mkdir /app/mule-standalone-${MULE_VERSION} && \
     ln -s /app/mule-standalone-${MULE_VERSION} ${MULE_HOME}
 	
@@ -48,10 +48,13 @@ RUN cd ~ && wget https://repository-master.mulesoft.org/nexus/content/repositori
 COPY wrapper.conf /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
 COPY helloworld.jar /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 
-USER root
-RUN id -u 185 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
-RUN id -u 185 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
-RUN chmod -R 777 /app/
+#USER root
+#RUN id -u 185 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/conf/wrapper.conf
+#RUN id -u 185 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
+#RUN chmod -R 777 /app/
+
+RUN chgrp -R 0 /app/mule && \
+    chmod -R g+rwX /app/mule
 
 USER 185
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]

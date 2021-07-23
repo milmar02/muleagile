@@ -53,8 +53,8 @@ COPY helloworld.jar /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 #RUN id -u 185 | xargs -I{} chown {}:{} /app/mule-standalone-${MULE_VERSION}/apps/hello-world.jar
 #RUN chmod -R 777 /app/
 
-RUN chgrp -R 0 /app/mule && \
-    chmod -R g+rwX /app/mule
+RUN chgrp -R 0 /app/mule/ && \
+    chmod -R g+rwX /app/mule/
 
 USER 185
 VOLUME ["${MULE_HOME}/logs", "${MULE_HOME}/conf", "${MULE_HOME}/apps", "${MULE_HOME}/domains"]
